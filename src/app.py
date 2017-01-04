@@ -3,8 +3,9 @@
 
 from highlighter import add_highlights_to_pages
 from pdf_word_analyzer import analysis
+from input_parser import get_input
 
-def run(in_pdf, colors_dict, out_pdf):
+def run(in_pdf, colors_dict, out_pdf, output_log):
 	print("running...")
 	
 	data = analysis(in_pdf)	# Word analysis of the pdf file
@@ -14,7 +15,7 @@ def run(in_pdf, colors_dict, out_pdf):
 	pages = data["pages"]	# Page of each word
 	total_pages = data["total_pages"]	# Total pages of the pdf
 	
-	print("Total pages " + str(total_pages))
+	print("Total pages " + str(total_pages+1))
 	
 	# Keep only given words in 'keys' dict
 	# keys includes [cords, page, color] for each given word
@@ -27,26 +28,30 @@ def run(in_pdf, colors_dict, out_pdf):
 			dict["page"] = pages[i]
 			dict["color"] = colors_dict[val]
 			keys[val] = dict
+			
+	results = open(output_log, "w")
 	
+	found_words = []
+	for w in words:	# each found word on pdf
+		found_words.append(w.encode("utf-8").rstrip("\n\r"))
+	
+	for given_word in list(colors_dict):
+		if given_word not in found_words:	# word not found on pdf
+			res = given_word + " : " + colors_dict[given_word] + " : " + "Not found\n"
+		else:
+			res = given_word + " : " + colors_dict[given_word] + " : " + "Found\n"
+		results.write(res)
+	results.close
 	# Now we have all the needed words with their coordinates and color inside 'keys dict'
 	add_highlights_to_pages(in_pdf, keys, out_pdf, total_pages)
+	print("Script finished...")
 
 
 if __name__ == "__main__":
-	# TODO read data from csv, txt, excel file
-	keys = {"-2.048A": "red",
-			"-2.048B": "green",
-			"-3.059A": "Yellow",
-			"-3.005B": "Blue",
-			"1.005A": "Yellow",
-			"1.015A": "Blue",
-			"0.016A": "Yellow",
-			"0.017A": "Blue",
-			"keep": "Red",
-			"know": "Green",
-			"can": "Yellow",
-			"piggy": "Blue",
-			"kdokoliv": "Green"}
-			
-	run("input.pdf", keys, "output.pdf")
-	run("eminem.pdf", keys, "outputem.pdf")
+	input_colors = "example_inputs\input.txt"
+	input_pdf = "example_inputs\input.pdf"
+	output_pdf = "output.pdf"
+	output_log = "results.txt"
+	
+	keys = get_input(input_colors)	
+	run(input_pdf, keys, output_pdf, output_log)

@@ -29,7 +29,7 @@ def analysis(pdf_file_path):
 		interpreter = PDFPageInterpreter(rsrcmgr, device)		
 		
 	except Exception as e:
-		print(e)
+		print("Error opening pdf file", e)
 		sys.exit(1)
 
 	print("Starting word analysis...")
@@ -65,7 +65,6 @@ def analysis(pdf_file_path):
 						words.append(word)
 						pages.append(idx)
 						coordinates.append(y.bbox)
-					#print(text, cords, idx)
 	
 	print("Word analysis completed...")
 	f.close()

@@ -1,0 +1,10 @@
+-2.048A : red
+-2.048B : green
+-3.059  : Yellow
+-3.005B: Blue
+1.005A : Yellow
+1.015A :Blue
+0.016A  :   Yellow
+0.017A :Blue
+
+

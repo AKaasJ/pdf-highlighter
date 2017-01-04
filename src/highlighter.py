@@ -23,10 +23,9 @@ def add_highlights_to_pages(input_pdf_path, data, out_pdf_path, total_pages):
 	# read your existing PDF
 	existing_pdf = PdfFileReader(file(input_pdf_path, "rb"))
 	pages = []
-	print(input_pdf_path)
+	print("Input pdf: " + input_pdf_path)
 	
 	for i in range(0,total_pages+1):
-		print(i)
 		pages.append(existing_pdf.getPage(i))
 		
 	for word in data:
@@ -34,8 +33,6 @@ def add_highlights_to_pages(input_pdf_path, data, out_pdf_path, total_pages):
 		cords = data[word]["cords"]
 		page_num = data[word]["page"]
 		
-		print(word, color, cords, page_num)
-	
 		packet = StringIO.StringIO()
 		canvas = create_canvas(cords, color, packet)
 		# merge changes with the old pdf
