@@ -2,6 +2,7 @@
 Run: "python app.py"
 It will find all the words of the dictionary and it will create output.pdf and results.txt
 Change main function of app.py to give other input/output files
+Note that windows uses '\' for paths and linux uses '/'
 
 
 

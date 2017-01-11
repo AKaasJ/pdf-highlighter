@@ -26,8 +26,8 @@ def analysis(pdf_file_path):
 		rsrcmgr = PDFResourceManager()
 		laparams = LAParams()
 		device = PDFPageAggregator(rsrcmgr, laparams=laparams)
-		interpreter = PDFPageInterpreter(rsrcmgr, device)		
-		
+		interpreter = PDFPageInterpreter(rsrcmgr, device)
+
 	except Exception as e:
 		print("Error opening pdf file", e)
 		sys.exit(1)
@@ -36,37 +36,37 @@ def analysis(pdf_file_path):
 	words = []
 	coordinates = []
 	pages = []
-	
+
 	for idx, page in enumerate(PDFPage.create_pages(doc)):
 		interpreter.process_page(page)
 		layout = device.get_result()
 		for x in layout:
 			if (type(x).__name__ == "LTTextBoxHorizontal" or type(x).__name__ == "LTTextBoxVertical"):
 				for y in x:
-					text = y.get_text()					
-					word = ""
-					cords = []
-					for z in y:	# for each letter
-						if (z.get_text() != " "):
-							word += z.get_text()
-							try:
-								cords.append(z.bbox)
-							except:
-								continue
-						else:
-							if (word != ""):
-								words.append(word)
-								pages.append(idx)
-								# TODO fix only last letter highlighting
-								coordinates.append(cords[-1])
-								word = ""
+					text = y.get_text()
+#					word = ""
+#					cords = []
+#					for z in y:	# for each letter
+#						if (z.get_text() != " "):
+#							word += z.get_text()
+#							try:
+#								cords.append(z.bbox)
+#							except:
+#								continue
+#						else:
+#							if (word != ""):
+#								words.append(word)
+#								pages.append(idx)
+#								# TODO fix only last letter highlighting
+#								coordinates.append(cords[-1])
+#								word = ""
 
-					if (word != "" and word not in words):
-						words.append(word)
+					if (text != "" and text not in words):
+						words.append(text)
 						pages.append(idx)
 						coordinates.append(y.bbox)
-	
+
 	print("Word analysis completed...")
 	f.close()
 	return {"words": words, "pages": pages, "coordinates": coordinates, "total_pages": idx}
-	
+
